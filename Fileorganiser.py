@@ -1,48 +1,41 @@
 import os
 import shutil
 
-# Set the directory to be organized
-directory = 'E:'
+def organize_files(directory, destination_mapping):
+    for destination in destination_mapping.values():
+        os.makedirs(destination, exist_ok=True)
 
-# Set the destination directory for each file type
-document_dest = 'C:/Users/User/Desktop/Organized/Documents'
-image_dest = 'C:/Users/User/Desktop/Organized/Images'
-audio_dest = 'C:/Users/User/Desktop/Organized/Audio'
-video_dest = 'C:/Users/User/Desktop/Organized/Video'
-executable_dest = 'C:/Users/User/Desktop/Organized/Executables'
-archive_dest = 'C:/Users/User/Desktop/Organized/Archives'
-other_dest = 'C:/Users/User/Desktop/Organized/Others'
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
 
-# Create the destination directories if they don't exist
-os.makedirs(document_dest, exist_ok=True)
-os.makedirs(image_dest, exist_ok=True)
-os.makedirs(audio_dest, exist_ok=True)
-os.makedirs(video_dest, exist_ok=True)
-os.makedirs(executable_dest, exist_ok=True)
-os.makedirs(archive_dest, exist_ok=True)
-os.makedirs(other_dest, exist_ok=True)
+        for extension, destination in destination_mapping.items():
+            if filename.endswith(extension):
+                shutil.move(file_path, os.path.join(destination, filename))
+                break
 
-# Loop through each file in the directory
-for filename in os.listdir(directory):
-    file_path = os.path.join(directory, filename)
+    print('Files have been organized!')
 
-    # Determine the file type using the file extension
-    if filename.endswith('.doc') or filename.endswith('.docx') or filename.endswith('.pdf'):
-        destination = document_dest
-    elif filename.endswith('.jpg') or filename.endswith('.png') or filename.endswith('.gif'):
-        destination = image_dest
-    elif filename.endswith('.mp3') or filename.endswith('.wav'):
-        destination = audio_dest
-    elif filename.endswith('.mp4') or filename.endswith('.avi'):
-        destination = video_dest
-    elif filename.endswith('.exe') or filename.endswith('.msi'):
-        destination = executable_dest
-    elif filename.endswith('.zip') or filename.endswith('.rar'):
-        destination = archive_dest
-    else:
-        destination = other_dest
+def main():
+    directory = 'E:'
 
-    # Move the file to its destination directory
-    shutil.move(file_path, os.path.join(destination, filename))
+    destination_mapping = {
+        '.doc': 'C:/Users/User/Desktop/Organized/Documents',
+        '.docx': 'C:/Users/User/Desktop/Organized/Documents',
+        '.pdf': 'C:/Users/User/Desktop/Organized/Documents',
+        '.jpg': 'C:/Users/User/Desktop/Organized/Images',
+        '.png': 'C:/Users/User/Desktop/Organized/Images',
+        '.gif': 'C:/Users/User/Desktop/Organized/Images',
+        '.mp3': 'C:/Users/User/Desktop/Organized/Audio',
+        '.wav': 'C:/Users/User/Desktop/Organized/Audio',
+        '.mp4': 'C:/Users/User/Desktop/Organized/Video',
+        '.avi': 'C:/Users/User/Desktop/Organized/Video',
+        '.exe': 'C:/Users/User/Desktop/Organized/Executables',
+        '.msi': 'C:/Users/User/Desktop/Organized/Executables',
+        '.zip': 'C:/Users/User/Desktop/Organized/Archives',
+        '.rar': 'C:/Users/User/Desktop/Organized/Archives'
+    }
 
-print('Files have been organized!')
+    organize_files(directory, destination_mapping)
+
+if __name__ == "__main__":
+    main()
